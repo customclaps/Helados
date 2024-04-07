@@ -12,7 +12,7 @@ export default function CalcularPosiciones(Matriz) {
     const x = math.lusolve(matriz, b);
     let posX = 0
     Matriz.forEach((element, key) => {
-        Matriz.set(key, { ...Matriz.get(key), pos: x[posX] })
+        Matriz.set(key, { ...Matriz.get(key), pos: x[posX][0] })
         posX++
     })
     return Matriz
