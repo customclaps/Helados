@@ -10,7 +10,7 @@ import { SVG2 } from './Utils/SVG'
 import traceBoolean from './Utils/traceBoolean'
 import ThreeObjects from './ThreeObjects';
 // import ThreeObjects from './ThreeObjects';
-const Colores = ["red", "blue", "green", "yellow", "orange", "purple"];
+const Colores = ["red", "blue", "green","pink","yellow"];
 let Ma
 
 function Ejemplo1(props) {
@@ -51,7 +51,7 @@ function Ejemplo1(props) {
         let Colors = Colores.slice(0, 5)
         Colors.forEach((Color, index) => {
             const obj = new fabric.Path(SVG2, { fill: Color, left: index * 70 })
-            const result1 = offsetPathF(obj, 4, 'miter')
+            const result1 = offsetPathF(obj, 6, 'miter')
             const local = new fabric.Path(result1.getPathData(), { fill: 'white', stroke: 'black' })
 
             obj.set({ nombre: 'in' })
@@ -90,9 +90,10 @@ function Ejemplo1(props) {
                     const _in = ConvertP(Objetos[obj]._objects.filter(o => o.nombre === 'in')[0])
                     etapa1 = traceBoolean(etapa1, _in, 'subtract')
                 })
-                _objOut.reverse()
+               
                 etapa1.reverse()
                 etapa2.reverse()
+                _objOut.reverse()
                 jsonFormas = { tipo: 1, etapas: [_objOut.getPathData(), etapa1.getPathData(), etapa2.getPathData()] }
 
             }
@@ -103,8 +104,9 @@ function Ejemplo1(props) {
                     etapa1 = traceBoolean(etapa1, _out, 'subtract')
                 })
 
-                // console.log(resul)
-                jsonFormas = { tipo: 0, etapas: [_contorno.getPathData(), etapa1.getPathData()] }
+                etapa1.reverse()
+                _objOut.reverse()
+                jsonFormas = { tipo: 0, etapas: [_objOut.getPathData(), etapa1.getPathData()] }
 
             }
             else if (objeto.down.length && !objeto.up.length) {
@@ -113,7 +115,10 @@ function Ejemplo1(props) {
                     const _in = ConvertP(Objetos[obj]._objects.filter(o => o.nombre === 'in')[0])
                     etapa1 = traceBoolean(etapa1, _in, 'subtract')
                 })
-                jsonFormas = { tipo: 2, etapas: [_contorno.getPathData(), etapa1.getPathData()] }
+                etapa1.reverse()
+                _objOut.reverse()
+                _contorno.reverse()
+                jsonFormas = { tipo: 2, etapas: [_objOut.getPathData(),etapa1.getPathData(),_contorno.getPathData()] }
 
             }
 

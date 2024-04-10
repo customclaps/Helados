@@ -4,9 +4,9 @@ import { deserializers } from '@jscad/io'
 import * as THREE from 'three'
 import { union } from '@jscad/modeling/src/operations/booleans';
 
-const hueco = 2
-const base = 1
-const Herradura = 4
+const hueco = 4
+const base = 2
+const Herradura = 8
 function extrTrans(pos, extr, path) {
     const svgText = `
     <svg>
@@ -24,18 +24,16 @@ function extrTrans(pos, extr, path) {
     return trans
 }
 
+let Objs = []
 function GenerarObj3d(propsData) {
-    const Objs=[]
-    propsData.forEach(obj => {
-
+    propsData.forEach((obj, key) => {
         switch (obj.formas.tipo) {
             case 0: {
                 const etapa0 = extrTrans(0, base, obj.formas.etapas[0])
-                const etapa1 = extrTrans(base, hueco, obj.formas.etapas[1])
-                const etapa2 = extrTrans(base + hueco, Herradura - base - hueco, obj.formas.etapas[2])
-                const unionEtapa012 = union(etapa0, etapa1, etapa2)
-                const etapas = jscad2Obj3d(unionEtapa012)
-                return <primitive object={etapas} position={[0, 0, 10 * obj.formas.pos]} />
+                const etapa1 = extrTrans(base, Herradura, obj.formas.etapas[1])
+                const unionEtapa01 = union(etapa0, etapa1)
+                const etapas = jscad2Obj3d(unionEtapa01)
+                Objs.push(<primitive object={etapas} position={[0, 0, base * obj.pos]} key={key} />)
 
             }
                 break
@@ -46,16 +44,18 @@ function GenerarObj3d(propsData) {
                     const etapa2 = extrTrans(base + hueco, Herradura - base - hueco, obj.formas.etapas[2])
                     const unionEtapa012 = union(etapa0, etapa1, etapa2)
                     const etapas = jscad2Obj3d(unionEtapa012)
-                    return <primitive object={etapas} position={[0, 0, 10 * obj.formas.pos]} />
+                    Objs.push(<primitive object={etapas} position={[0, 0, base * obj.pos]} key={key} />)
                 }
                 break;
             case 2: {
                 const etapa0 = extrTrans(0, base, obj.formas.etapas[0])
-                const etapa1 = extrTrans(base, Herradura, obj.formas.etapas[1])
-                const unionEtapa01 = union(etapa0, etapa1)
-                const etapas = jscad2Obj3d(unionEtapa01)
-                return <primitive object={etapas} position={[0, 0, 10 * obj.formas.pos]} />
+                const etapa1 = extrTrans(base, hueco, obj.formas.etapas[1])
+                const etapa2 = extrTrans(base + hueco, Herradura - base - hueco, obj.formas.etapas[2])
+                const unionEtapa012 = union(etapa0, etapa1, etapa2)
+                const etapas = jscad2Obj3d(unionEtapa012)
+                Objs.push(<primitive object={etapas} position={[0, 0, base * obj.pos]} key={key} />)
             }
+
                 break;
 
 
